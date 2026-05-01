@@ -39,7 +39,6 @@ class SharedButton extends StatelessWidget {
         splashFactory: NoSplash.splashFactory,
         backgroundColor: color ?? context.color.primary,
         foregroundColor: context.color.surface,
-        elevation: 1,
         alignment: Alignment.center,
         minimumSize: Size(width ?? double.infinity.w, height ?? 50.h),
         side: BorderSide(style: BorderStyle.none, color: Colors.transparent),

@@ -63,6 +63,8 @@ final getProfileFutureProvider = FutureProvider.autoDispose
 
 final completeProfileProvider = FutureProvider.autoDispose
     .family<UserModel, Map<String, dynamic>>((ref, payload) async {
+      final token = ref.read(appStateProvider).user?.authToken;
+      debugPrint('TOKEN BEFORE COMPLETE PROFILE: $token');
       final response = await ref
           .read(authServiceProvider)
           .completeProfile(payload);

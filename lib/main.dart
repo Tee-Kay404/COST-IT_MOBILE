@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:cost_it_mobile/app/global/colors.dart';
 import 'package:cost_it_mobile/app/global/config.dart';
+import 'package:cost_it_mobile/app/global/providers.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/route/routes.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +13,24 @@ void main() {
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: CostItColors.primary2,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarColor: Color(0xFF6580CF),
+      statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
   AppConfig(environment: Environment.dev);
-  runApp(ProviderScope(child: CostItApp()));
+  runApp(
+    ProviderScope(
+      child: Consumer(
+        builder: (context, ref, _) {
+          ref.watch(appStateLoaderProvider);
+          return CostItApp();
+        },
+      ),
+    ),
+  );
 }
 
 class CostItApp extends StatelessWidget {

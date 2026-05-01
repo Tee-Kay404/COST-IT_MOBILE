@@ -30,18 +30,18 @@ class LoginView extends ConsumerStatefulWidget {
 
 class _LoginViewState extends ConsumerState<LoginView> {
   final _identifierController = TextEditingController();
-  final _passwordController   = TextEditingController();
-  final _formKey              = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   AutovalidateMode get _autovalidateMode => _submitted
       ? AutovalidateMode.onUserInteraction
       : AutovalidateMode.disabled;
 
-  bool _obscured           = true;
-  bool _isTapped           = false;
-  bool _identifierHasText  = false;
-  bool _passwordHasText    = false;
-  bool _submitted          = false;
+  bool _obscured = true;
+  bool _isTapped = false;
+  bool _identifierHasText = false;
+  bool _passwordHasText = false;
+  bool _submitted = false;
 
   bool _rememberMe = false;
 
@@ -73,16 +73,16 @@ class _LoginViewState extends ConsumerState<LoginView> {
   }
 
   Future<void> _restoreRememberMe() async {
-    final service   = ref.read(rememberMeServiceProvider);
-    final savedId   = await service.getSavedIdentifier();
+    final service = ref.read(rememberMeServiceProvider);
+    final savedId = await service.getSavedIdentifier();
     final isEnabled = await service.isEnabled();
 
     if (!mounted) return;
 
     setState(() {
-      _rememberMe = isEnabled; 
+      _rememberMe = isEnabled;
       if (savedId != null) {
-        _identifierController.text = savedId; 
+        _identifierController.text = savedId;
         _identifierHasText = savedId.isNotEmpty;
       }
     });
@@ -104,7 +104,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
     setState(() {
       identifierError = null;
-      passwordError   = null;
+      passwordError = null;
     });
 
     final service = ref.read(rememberMeServiceProvider);
@@ -120,7 +120,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       computation: () => ref.read(
         loginFutureProvider({
           'identifier': _identifierController.text.trim(),
-          'password':   _passwordController.text,
+          'password': _passwordController.text,
         }).future,
       ),
       onError: (error) {
@@ -129,7 +129,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           error,
           fieldErrors: {
             'identifier': (msg) => setState(() => identifierError = msg),
-            'password':   (msg) => setState(() => passwordError   = msg),
+            'password': (msg) => setState(() => passwordError = msg),
           },
         );
         return null;
@@ -138,9 +138,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
     if (user != null && context.mounted) {
       showCustomToast('Login Successful', CostItColors.success, context);
-      ref.read(appStateProvider.notifier).updateAppState(
-        (s) => s.copyWith(user: user),
-      );
+      ref
+          .read(appStateProvider.notifier)
+          .updateAppState((s) => s.copyWith(user: user));
       Navigator.of(context).pushReplacementNamed(PageRoutes.dashBoard.name);
     }
   }
@@ -149,60 +149,61 @@ class _LoginViewState extends ConsumerState<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          AuthHeader(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Gap(10.h),
-                SizedBox(
-                  height: 60.h,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Image.asset(
-                      AppImages.logo2,
-                      height: 120.h,
-                      width: 140.h,
-                      color: Colors.yellow.shade600,
-                      fit: BoxFit.contain,
+      body: SafeArea(
+        child: Column(
+          children: [
+            AuthHeader(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(10.h),
+                  SizedBox(
+                    height: 60.h,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Image.asset(
+                        AppImages.logo2,
+                        height: 120.h,
+                        width: 140.h,
+                        color: Colors.yellow.shade600,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
-                ),
-                Gap(10.h),
-                Text.rich(
-                  textAlign: TextAlign.start,
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Welcome Back! 👋\n',
-                        style: context.bodyMedium?.copyWith(
-                          fontSize: 25.sp,
-                          fontWeight: FontWeight.bold,
-                          color: context.color.surface,
+                  Gap(10.h),
+                  Text.rich(
+                    textAlign: TextAlign.start,
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Welcome Back! 👋\n',
+                          style: context.bodyMedium?.copyWith(
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.bold,
+                            color: context.color.surface,
+                          ),
                         ),
-                      ),
-                      WidgetSpan(
-                        child: Padding(padding: EdgeInsets.only(top: 30.h)),
-                      ),
-                      TextSpan(
-                        text: 'Let\'s continue the journey smarter, faster and stronger!',
-                        style: context.bodySmall?.copyWith(
-                          color: context.color.surface,
+                        WidgetSpan(
+                          child: Padding(padding: EdgeInsets.only(top: 30.h)),
                         ),
-                      ),
-                    ],
+                        TextSpan(
+                          text:
+                              'Let\'s continue the journey smarter, faster and stronger!',
+                          style: context.bodySmall?.copyWith(
+                            color: context.color.surface,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          Expanded(
-            child: SafeArea(
+            Expanded(
               child: SingleChildScrollView(
-                  child: AutofillGroup(
+                child: AutofillGroup(
                   onDisposeAction: AutofillContextAction.commit,
                   child: Form(
                     key: _formKey,
@@ -259,7 +260,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                             errorText: passwordError,
                             suffixIcon: GestureDetector(
-                              onTap: () => setState(() => _obscured = !_obscured),
+                              onTap: () =>
+                                  setState(() => _obscured = !_obscured),
                               child: Padding(
                                 padding: EdgeInsets.all(12.w),
                                 child: AnimatedSwitcher(
@@ -423,8 +425,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

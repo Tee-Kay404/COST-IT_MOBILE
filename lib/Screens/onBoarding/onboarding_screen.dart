@@ -81,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final imageHeight = size.height * 0.60;
+    final imageHeight = size.height * 0.57;
 
     final bool isLastPage = _currentPage == widget.pages.length - 1;
     final page = widget.pages[_currentPage];

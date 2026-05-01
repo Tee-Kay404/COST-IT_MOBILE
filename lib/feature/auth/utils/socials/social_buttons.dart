@@ -15,7 +15,7 @@ class SocialButtons extends ConsumerWidget {
           (provider) => Padding(
             padding: EdgeInsets.only(bottom: 12.h),
             child: GestureDetector(
-              onTap: () => provider.tapHandler(context, ref),
+              onTap: provider.tapHandler(context, ref),
               child: Container(
                 width: double.infinity,
                 height: 50.h,

@@ -71,6 +71,10 @@ class _GetStartedState extends State<GetStarted>
         );
 
     _controller.forward();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(AssetImage(AppImages.getStarted), context);
+    });
   }
 
   @override
@@ -183,7 +187,6 @@ class _GetStartedState extends State<GetStarted>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Space below logo area — tighter so heading sits closer
                   Gap(height * 0.09),
 
                   const Spacer(),
@@ -202,7 +205,7 @@ class _GetStartedState extends State<GetStarted>
                                 fontWeight: FontWeight.w500,
                                 color: context.color.surface,
                                 height: 1.15,
-                                letterSpacing: -2.9,
+                                letterSpacing: -3.2,
                               ),
                             ),
                             TextSpan(

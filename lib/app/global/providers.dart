@@ -9,10 +9,7 @@ import 'models.dart';
 
 // Storage Provider
 final appStorageServiceProvider = Provider((ref) {
-  return HiveStorageService<String, dynamic>(
-    boxName: 'appStore',
-    lazy: false,
-  );
+  return HiveStorageService<String, dynamic>(boxName: 'appStore', lazy: false);
 });
 
 // Load App State On Start
@@ -21,18 +18,23 @@ final appStateLoaderProvider = FutureProvider<AppStateModel>((ref) async {
 
   try {
     // Load stored state
-    appState =
-        await ref.read(appStateProvider.notifier).initialiseAppState();
+    appState = await ref.read(appStateProvider.notifier).initialiseAppState();
 
     // If user exists → refresh profile
     if (appState.user != null) {
       try {
-        final user =
-            await ref.read(getProfileFutureProvider({}).future);
+        final user = await ref.read(getProfileFutureProvider({}).future);
 
-        ref.read(appStateProvider.notifier).updateUser(user);
+        // preserve the existing token explicitly
+        ref
+            .read(appStateProvider.notifier)
+            .updateUser(
+              user,
+              overrideAuthToken: false, // ← this keeps currentUser?.authToken
+            );
       } catch (e, stack) {
         log(e.toString());
+
         log(stack.toString());
       }
     }
@@ -50,21 +52,28 @@ class AppStateNotifier extends StateNotifier<AppStateModel> {
   final Ref ref;
 
   AppStateNotifier(this.ref, this.storageService)
-      : super(const AppStateModel());
+    : super(const AppStateModel());
 
-  // Initialize App State from Storage 
+  // Initialize App State from Storage
   Future<AppStateModel> initialiseAppState() async {
     AppStateModel appState = const AppStateModel();
 
     try {
       final data = await storageService.getAllItemsMapped();
 
-      final appStateData = Map<String, dynamic>.from(data);  
+      final appStateData = Map<String, dynamic>.from(data);
 
       log("Stored App State: $appStateData");
 
       if (appStateData.isNotEmpty) {
         appState = AppStateModel.fromMap(appStateData);
+        // Restore token separately stored
+        final savedToken = await storageService.getItem("token");
+        if (savedToken != null && appState.user != null) {
+          appState = appState.copyWith(
+            user: appState.user!.copyWith(authToken: savedToken as String),
+          );
+        }
       } else {
         appState = appState.copyWith(isFirstTime: true);
       }
@@ -77,20 +86,15 @@ class AppStateNotifier extends StateNotifier<AppStateModel> {
     return state;
   }
 
-  // Save Settings 
+  // Save Settings
   Future<void> saveSettings(SettingsModel settings) async {
     state = state.copyWith(settings: settings);
 
-    await storageService.addItem(
-      "settings",
-      settings.toMap(),
-    );
+    await storageService.addItem("settings", settings.toMap());
   }
 
-  // Generic State Update 
-  void updateAppState(
-    AppStateModel Function(AppStateModel state) callback,
-  ) {
+  // Generic State Update
+  void updateAppState(AppStateModel Function(AppStateModel state) callback) {
     state = callback(state);
   }
 
@@ -98,43 +102,44 @@ class AppStateNotifier extends StateNotifier<AppStateModel> {
   void updateUser(UserModel user, {bool overrideAuthToken = false}) {
     final currentUser = state.user;
 
-    final updatedUser = user.copyWith(
-     authToken: overrideAuthToken
-    ? user.authToken
-    : currentUser?.authToken ?? user.authToken,
-    );
+    final preservedToken = overrideAuthToken
+        ? user.authToken
+        : currentUser?.authToken ?? user.authToken;
+
+    final updatedUser = user.copyWith(authToken: preservedToken);
 
     state = state.copyWith(user: updatedUser);
 
-    storageService.addItem(
-      "user",
-      updatedUser.toMap(),
-    );
+    // Save user data
+    storageService.addItem("user", updatedUser.toMap());
+
+    // Save token separately so it survives profile refreshes
+    if (preservedToken != null) {
+      storageService.addItem("token", preservedToken);
+    }
   }
 
-  // Logout 
- Future<void> logout() async {
-  final isFirstTime = state.isFirstTime;
-  final settings = state.settings;
+  // Logout
+  Future<void> logout() async {
+    final isFirstTime = state.isFirstTime;
+    final settings = state.settings;
 
-  // remove only auth-related data
-  await storageService.removeItem("user");
-  await storageService.removeItem("token"); // if stored separately
+    // remove only auth-related data
+    await storageService.removeItem("user");
+    await storageService.removeItem("token"); // if stored separately
 
-  // reset memory state but keep preferences
-  state = AppStateModel(
-    isFirstTime: isFirstTime,
-    settings: settings,
-    user: null,
-  );
-}
+    // reset memory state but keep preferences
+    state = AppStateModel(
+      isFirstTime: isFirstTime,
+      settings: settings,
+      user: null,
+    );
+  }
 }
 
 // Global State Provider
-final appStateProvider =
-    StateNotifierProvider<AppStateNotifier, AppStateModel>((ref) {
-  return AppStateNotifier(
-    ref,
-    ref.watch(appStorageServiceProvider),
-  );
-});
+final appStateProvider = StateNotifierProvider<AppStateNotifier, AppStateModel>(
+  (ref) {
+    return AppStateNotifier(ref, ref.watch(appStorageServiceProvider));
+  },
+);

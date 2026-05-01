@@ -69,10 +69,10 @@ Future<void> handleGoogleSignIn(
   if (user == null || !context.mounted) return;
 
   
-  ref.read(appStateProvider.notifier).updateAppState(
-    (state) => state.copyWith(user: user),
-  );
-
+ref.read(appStateProvider.notifier).updateUser(
+  user,
+  overrideAuthToken: true, 
+);
   
   if (user.isNewUser == true || !user.isProfileComplete) {
     Navigator.pushNamed(

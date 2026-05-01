@@ -35,11 +35,11 @@ class AppConfig {
   String get baseAppUrl {
     switch (_instance.environment) {
       case Environment.dev:
-        return "http://localhost:3120/api/";
+        return "http://192.168.207.181:3120/api/";
       case Environment.staging:
-        return "http://localhost:3120/api/";
+        return "http://192.168.207.181:3120/api/";
       case Environment.prod:
-        return "http://localhost:3120/api/";
+        return "http://192.168.207.181:3120/api/";
     }
   }
 
@@ -55,11 +55,11 @@ class AppConfig {
   }
 
   Duration get sendTimeout {
-    return const Duration(milliseconds: 50000);
+    return const Duration(milliseconds: 60000);
   }
 
   Duration get receiveTimeout {
-    return const Duration(milliseconds: 50000);
+    return const Duration(milliseconds: 60000);
   }
 
   static String get alchemyApiKey => const String.fromEnvironment(

@@ -25,24 +25,46 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final _identifierController = TextEditingController();
+  // Separate controllers for each tab
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   bool _submitted = false;
-  bool _isFilled = false;
 
-  String? identifierError;
+  // Separate filled-state trackers per tab
+  bool _emailFilled = false;
+  bool _phoneFilled = false;
+
+  String? _emailError;
+  String? _phoneError;
+
+  // Convenience getter: active identifier based on current tab
+  String get _activeIdentifier {
+    if (_tabController.index == 0) {
+      return _emailController.text.trim();
+    }
+    return _phoneController.text.trim();
+  }
+
+  bool get _isFilled =>
+      _tabController.index == 0 ? _emailFilled : _phoneFilled;
 
   @override
   void initState() {
     super.initState();
-
     _tabController = TabController(length: 2, vsync: this);
 
+    // Rebuild when the tab changes so _isFilled re-evaluates
     _tabController.addListener(() {
-      setState(() {
-        _isFilled = _identifierController.text.trim().isNotEmpty;
-      });
+      if (_tabController.indexIsChanging) {
+        // Reset submitted state when switching tabs so validations don't
+        // immediately fire on the newly visible (possibly empty) field.
+        setState(() {
+          _submitted = false;
+        });
+      }
     });
   }
 
@@ -50,26 +72,34 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
       ? AutovalidateMode.onUserInteraction
       : AutovalidateMode.disabled;
 
-  void _checkFields(String value) {
+  void _onEmailChanged(String value) {
     setState(() {
-      _isFilled = value.trim().isNotEmpty;
+      _emailFilled = value.trim().isNotEmpty;
+      if (_emailError != null) _emailError = null;
+    });
+  }
 
-      if (identifierError != null) {
-        identifierError = null;
-      }
+  void _onPhoneChanged(String value) {
+    setState(() {
+      _phoneFilled = value.trim().isNotEmpty;
+      if (_phoneError != null) _phoneError = null;
     });
   }
 
   Future<void> _next() async {
     setState(() {
       _submitted = true;
-      identifierError = null;
+      // Clear the error only for the active tab
+      if (_tabController.index == 0) {
+        _emailError = null;
+      } else {
+        _phoneError = null;
+      }
     });
 
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    final identifier = _identifierController.text.trim();
-
+    final identifier = _activeIdentifier;
     final payload = {"identifier": identifier};
 
     final result = await futureProgressCaller(
@@ -82,7 +112,14 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
           context,
           error,
           fieldErrors: {
-            'identifier': (msg) => setState(() => identifierError = msg),
+            'identifier': (msg) => setState(() {
+                  // Route the server error to the correct tab's error field
+                  if (_tabController.index == 0) {
+                    _emailError = msg;
+                  } else {
+                    _phoneError = msg;
+                  }
+                }),
           },
         );
         return null;
@@ -94,7 +131,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
         context,
         PageRoutes.otpResetPassword.name,
         arguments: (
-          identifier: _identifierController.text,
+          identifier: identifier,
           nextRoute: PageRoutes.login,
         ),
       );
@@ -104,7 +141,8 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
   @override
   void dispose() {
     _tabController.dispose();
-    _identifierController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -133,6 +171,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                 ),
               ),
               Gap(20.h),
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -186,7 +225,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      // EMAIL
+                      // EMAIL TAB
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -205,7 +244,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                               horizontal: 5.0,
                             ),
                             child: CostItFormfield(
-                              controller: _identifierController,
+                              controller: _emailController,
                               hintText: 'Enter Email...',
                               keyboardType: TextInputType.emailAddress,
                               prefixIcon: const Icon(
@@ -213,13 +252,15 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                                 size: 17,
                               ),
                               validator: Validators.validateEmail,
-                              onChanged: _checkFields,
-                              errorText: identifierError,
+                              onChanged: _onEmailChanged,
+                              errorText: _emailError,
                             ),
                           ),
                           Gap(20.h),
                           Text(
-                            '''Please input your registered email for transparency. We'll send you a mail. Check your mail box and Follow the instructions sent to you to reset password''',
+                            "Please input your registered email for transparency. "
+                            "We'll send you a mail. Check your mail box and follow "
+                            "the instructions sent to you to reset your password.",
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: CostItColors.brightGrey.shade600,
                             ),
@@ -227,7 +268,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                         ],
                       ),
 
-                      // PHONE
+                      //  PHONE TAB
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -246,7 +287,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                               horizontal: 5.0,
                             ),
                             child: CostItFormfield(
-                              controller: _identifierController,
+                              controller: _phoneController,
                               hintText: 'Enter phone number',
                               keyboardType: TextInputType.phone,
                               prefixIcon: Icon(
@@ -254,13 +295,15 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                                 size: 17.sp,
                               ),
                               validator: Validators.validatePhone,
-                              onChanged: _checkFields,
-                              errorText: identifierError,
+                              onChanged: _onPhoneChanged,
+                              errorText: _phoneError,
                             ),
                           ),
                           Gap(20.h),
                           Text(
-                            '''Please input your registered phoneNo for transparency. An OTP will be sent to you. Do not let anyone see it. Check your SMS box and use OTP to reset password.''',
+                            "Please input your registered phone number for transparency. "
+                            "An OTP will be sent to you. Do not let anyone see it. "
+                            "Check your SMS box and use the OTP to reset your password.",
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: CostItColors.brightGrey.shade600,
                             ),
@@ -277,7 +320,6 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
               LoadingButton(
                 onTap: _isFilled ? _next : null,
                 text: 'Next',
-                // disabled: CostItColors.disabled,
               ),
 
               Gap(20.h),
