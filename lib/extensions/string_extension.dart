@@ -19,20 +19,33 @@ extension StringExtension on String {
   String get stripExtraQuotes {
     return trim().replaceAll('"', '');
   }
-String maskEmail(String email) {
-  final parts = email.split('@');
-  if (parts.length != 2) return email;
+  String get maskEmail {
+    final parts = split('@');
+    if (parts.length != 2) return this;
 
-  final name = parts[0];
-  final domain = parts[1];
+    final name = parts[0];
+    final domain = parts[1];
 
-  if (name.length <= 3) return email;
+    if (name.length <= 3) return this;
 
-  final visibleStart = name.substring(0, 3);
-  final maskedPart = '*' * (name.length - 3);
+    final visibleStart = name.substring(0, 3);
+    final maskedPart = '*' * (name.length - 3);
 
-  return '$visibleStart$maskedPart@$domain';
-}
+    return '$visibleStart$maskedPart@$domain';
+  }
+
+  /// Masks the middle digits of a phone number.
+  /// Shows the first 3 characters and last 2 characters, masking everything
+  /// in between with '*'.
+  /// e.g. "08012345678" → "080*******78"
+  String get maskPhone {
+    final p = trim();
+    if (p.length <= 5) return p;
+    final prefix = p.substring(0, 3);
+    final suffix = p.substring(p.length - 2);
+    final stars = '*' * (p.length - 5);
+    return '$prefix$stars$suffix';
+  }
 
   String get initials {
     if (isEmpty) return '';
@@ -56,4 +69,15 @@ String maskEmail(String email) {
   bool get isUppercase {
     return this == toUpperCase();
   }
+}
+
+
+String nameInitials(String first, String last) {
+  final f = first.isNotEmpty ? first[0].toUpperCase() : '';
+  final l = last.isNotEmpty ? last[0].toUpperCase() : '';
+  return '$f$l'.ifEmpty('G');
+}
+
+extension on String {
+  String ifEmpty(String fallback) => isEmpty ? fallback : this;
 }

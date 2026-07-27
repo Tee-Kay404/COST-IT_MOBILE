@@ -1,4 +1,5 @@
-import 'package:cost_it_mobile/app/global/styles.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
+import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -63,10 +64,10 @@ class EmptyStateWidget extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: titleTextStyle ??
-                Theme.of(context).textTheme.titleMedium!.copyWith(
+                context.titleMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       height: 1.3,
-                      color: Theme.of(context).textTheme.titleLarge!.color,
+                      color: context.titleLarge?.color,
                     ),
           ),
         ),

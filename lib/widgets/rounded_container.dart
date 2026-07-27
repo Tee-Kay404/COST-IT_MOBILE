@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

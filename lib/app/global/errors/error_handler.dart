@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:cost_it_mobile/app/global/errors/dialog/error_dialog.dart';
-import 'package:cost_it_mobile/app/global/errors/dialog/scaffold_message.dart';
-import 'package:cost_it_mobile/app/global/exception.dart';
+import 'package:cost_it_mobile/app/global/dialog/app_message_dialog.dart';
+import 'package:cost_it_mobile/app/global/dialog/scaffold_message.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -88,7 +88,7 @@ class ErrorHandler {
         break;
 
       case ErrorType.unauthorized:
-        showExceptionErrorMessage(
+        showAppMessageDialog(
           context,
           "Unauthorized",
           Icons.lock,
@@ -98,7 +98,7 @@ class ErrorHandler {
         break;
 
       case ErrorType.noInternet:
-        showExceptionErrorMessage(
+        showAppMessageDialog(
           context,
           "No Internet!",
           Icons.wifi_off,
@@ -108,7 +108,7 @@ class ErrorHandler {
         break;
 
       case ErrorType.timeout:
-        showExceptionErrorMessage(
+        showAppMessageDialog(
           context,
           "Timeout",
           Icons.timer_off,
@@ -117,7 +117,7 @@ class ErrorHandler {
         );
         break;
       case ErrorType.forbidden:
-        showExceptionErrorMessage(
+        showAppMessageDialog(
           context,
           "Sorry",
           Icons.cancel_outlined,

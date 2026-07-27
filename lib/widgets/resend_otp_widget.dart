@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:cost_it_mobile/app/global/colors.dart';
-import 'package:cost_it_mobile/app/global/errors/dialog/scaffold_message.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/dialog/scaffold_message.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -135,7 +135,7 @@ class _ResendOTPWidgetState extends State<ResendOTPWidget> {
         //     padding: EdgeInsets.only(top: 6.h),
         //     child: Text(
         //       "Too many requests. Please wait.",
-        //       style: TextStyle(fontSize: 12.sp, color: Colors.redAccent),
+        //       style: TextStyle(fontSize: 12.sp, color: CostItColors.error),
         //     ),
         //   ),
       ],

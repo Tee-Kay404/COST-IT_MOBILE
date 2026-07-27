@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -54,7 +54,7 @@ class OTPField extends StatelessWidget {
 
     final errorPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        border: Border.all(color: Colors.red),
+        border: Border.all(color: CostItColors.error),
       ),
     );
     return Pinput(

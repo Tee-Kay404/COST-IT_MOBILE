@@ -1,6 +1,6 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
-import 'package:cost_it_mobile/app/global/errors/dialog/scaffold_message.dart';
-import 'package:cost_it_mobile/app/global/exception.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/dialog/scaffold_message.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/feature/auth/providers/providers.dart';
 import 'package:cost_it_mobile/feature/auth/shared/button.dart';
@@ -97,39 +97,41 @@ class _OTPResetPasswordViewState extends ConsumerState<OTPResetPasswordView>
     });
   }
 
- Future<bool> _resendOTP({bool initial = false}) async {
-  setState(() {
-    _hasError = false;
-    _errorText = '';
-  });
-  _pinController.clear();
+  Future<bool> _resendOTP({bool initial = false}) async {
+    setState(() {
+      _hasError = false;
+      _errorText = '';
+    });
+    _pinController.clear();
 
-  final payload = {"identifier": widget.args.identifier};
+    final payload = {"identifier": widget.args.identifier};
 
-  return futureProgressCaller(
-    context,
-    loaderType: LoaderType.snack,
-    loadingMessage: "Sending code...",
-    computation: () => ref.read(resendForgotPasswordOTPProvider(payload).future),
-    onError: (error) {
-      final ex = error is GlobalException ? error : null;
-      final msg = ex?.message ?? 'Failed to resend OTP';
-      showErrorExceptionToast(context, msg);
-      return false;
-    },
-  ).then((value) {
-    if (value == true && !initial) {
-      showSuccessToast(context, "OTP sent successfully");
-    }
-    return value == true;
-  });
-}
+    return futureProgressCaller(
+      context,
+      loaderType: LoaderType.snack,
+      loadingMessage: "Sending code...",
+      computation: () =>
+          ref.read(resendForgotPasswordOTPProvider(payload).future),
+      onError: (error) {
+        final ex = error is GlobalException ? error : null;
+        final msg = ex?.message ?? 'Failed to resend OTP';
+        showErrorExceptionToast(context, msg);
+        return false;
+      },
+    ).then((value) {
+      if (value == true && !initial) {
+        showSuccessToast(context, "OTP sent successfully");
+      }
+      return value == true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 10.sp),
@@ -143,7 +145,7 @@ class _OTPResetPasswordViewState extends ConsumerState<OTPResetPasswordView>
                 'Reset Password',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 25.sp,
-                  color: context.color.primary,
+                  color: context.color.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

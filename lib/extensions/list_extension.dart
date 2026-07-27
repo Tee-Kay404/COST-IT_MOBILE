@@ -1,7 +1,7 @@
 import 'pagination.dart';
 
 extension ListExtension<T> on List<T> {
-  List<T> seperated(T separator) {
+  List<T> separatedBy(T separator) {
     if (isEmpty) return this;
 
     return expand((element) => [element, separator]).toList()..removeLast();
@@ -50,7 +50,6 @@ extension ListExtension<T> on List<T> {
   PaginationResult<T> paginate(int pageSize, int pageNumber) {
     return ListPaginator.paginate(this, pageSize, pageNumber);
   }
-
 
   List<T> simplePaginate(int pageSize, int pageNumber) {
     return ListPaginator.simplePaginate(this, pageSize, pageNumber);

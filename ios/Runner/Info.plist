@@ -35,13 +35,29 @@
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
 
+    <!-- ── Location usage descriptions (required by Apple) ───────── -->
+    <!-- Shown in the system permission dialog when the app first requests location -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Cost It uses your location to show construction materials and vendors near you.</string>
+    <!-- Only add NSLocationAlwaysAndWhenInUseUsageDescription if you need
+         background location. You almost certainly do not need this. -->
+    <!-- <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Cost It uses your location in the background to keep your feed relevant.</string> -->
+
+    <!-- ── Contacts, Camera, Microphone & Photo Library ─────────── -->
+    <key>NSContactsUsageDescription</key>
+    <string>Cost It accesses your contacts so you can find and connect with vendors and buyers already on the platform.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Cost It uses your camera to let you take photos of products, materials, or your profile picture.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Cost It uses your microphone to allow voice messages in chats.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Cost It accesses your photo library so you can upload product images or update your profile photo.</string>
+
     <!-- Google Sign-In — iOS Client ID -->
     <key>GIDClientID</key>
     <string>416311943816-591dqf1kqhq719mq2o1o6svqqu32iji2.apps.googleusercontent.com</string>
 
-    <!-- Google Sign-In — URL scheme for OAuth redirect back to app.
-         Must be the GIDClientID reversed (remove .apps.googleusercontent.com
-         and prefix with com.googleusercontent.apps.) -->
     <key>CFBundleURLTypes</key>
     <array>
       <dict>

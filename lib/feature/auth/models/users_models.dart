@@ -9,15 +9,15 @@ class UserModel extends Equatable {
   final String email;
   final String phoneNumber;
   final bool isVerified;
+  final bool isPhoneVerified;
   final DateTime? createdAt;
   final List<String>? roles;
   final String? authToken;
-
+  final String? refreshToken;
   final bool isGoogleUser;
-
   final bool isProfileComplete;
-
   final bool? isNewUser;
+  final String? photoUrl;
 
   const UserModel({
     required this.id,
@@ -26,12 +26,15 @@ class UserModel extends Equatable {
     required this.firstName,
     required this.lastName,
     required this.isVerified,
+    this.isPhoneVerified = false,
     this.createdAt,
     this.roles,
     this.authToken,
+    this.refreshToken,
     this.isGoogleUser = false,
     this.isProfileComplete = true,
     this.isNewUser,
+    this.photoUrl,
   });
 
   UserModel copyWith({
@@ -41,10 +44,13 @@ class UserModel extends Equatable {
     String? firstName,
     String? lastName,
     bool? isVerified,
+    bool? isPhoneVerified,
     String? authToken,
+    String? refreshToken,
     bool? isGoogleUser,
     bool? isProfileComplete,
     bool? isNewUser,
+    String? photoUrl,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -53,10 +59,13 @@ class UserModel extends Equatable {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       isVerified: isVerified ?? this.isVerified,
+      isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
       authToken: authToken ?? this.authToken,
+      refreshToken: refreshToken ?? this.refreshToken,
       isGoogleUser: isGoogleUser ?? this.isGoogleUser,
       isProfileComplete: isProfileComplete ?? this.isProfileComplete,
       isNewUser: isNewUser ?? this.isNewUser,
+      photoUrl: photoUrl ?? this.photoUrl,
     );
   }
 
@@ -72,6 +81,7 @@ class UserModel extends Equatable {
       firstName: userData['firstName'] ?? '',
       lastName: userData['lastName'] ?? '',
       isVerified: userData['verifiedAt'] != null,
+      isPhoneVerified: userData['isPhoneVerified'] ?? false,
       createdAt: userData['createdAt'] != null
           ? DateTime.parse(userData['createdAt'])
           : null,
@@ -79,9 +89,11 @@ class UserModel extends Equatable {
           ? List<String>.from(userData['roles'])
           : [],
       authToken: map['token'] ?? map['access_token'],
+      refreshToken: map['refresh_token'] as String?,
       isGoogleUser: userData['isGoogleUser'] ?? false,
       isProfileComplete: userData['isProfileComplete'] ?? true,
       isNewUser: map['isNewUser'] as bool?,
+      photoUrl: userData['photoUrl'] as String?,
     );
   }
 
@@ -93,9 +105,13 @@ class UserModel extends Equatable {
       'firstName': firstName,
       'lastName': lastName,
       'verifiedAt': isVerified ? DateTime.now().toIso8601String() : null,
+      'isPhoneVerified': isPhoneVerified,
       'token': authToken,
+      'refresh_token': refreshToken,
       'isGoogleUser': isGoogleUser,
       'isProfileComplete': isProfileComplete,
+      'isNewUser': isNewUser,
+      'photoUrl': photoUrl,
     };
   }
 
@@ -120,7 +136,8 @@ class UserModel extends Equatable {
   String toString() =>
       'UserModel(id: $id, email: $email, phoneNumber: $phoneNumber, '
       'firstName: $firstName, lastName: $lastName, isVerified: $isVerified, '
-      'isGoogleUser: $isGoogleUser, isProfileComplete: $isProfileComplete)';
+      'isPhoneVerified: $isPhoneVerified, isGoogleUser: $isGoogleUser, '
+      'isProfileComplete: $isProfileComplete, photoUrl: $photoUrl)';
 
   @override
   List<Object?> get props => [
@@ -130,8 +147,11 @@ class UserModel extends Equatable {
     firstName,
     lastName,
     isVerified,
+    isPhoneVerified,
     authToken,
+    refreshToken,
     isGoogleUser,
     isProfileComplete,
+    photoUrl,
   ];
 }

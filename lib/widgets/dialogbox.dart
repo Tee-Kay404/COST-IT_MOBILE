@@ -1,4 +1,5 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -19,7 +20,7 @@ Future<void> showDialogMessage(
       return Dialog(
         insetPadding: EdgeInsets.symmetric(
           horizontal: 30.w,
-        ), // controls dialog width
+        ), 
         backgroundColor: theme.primaryColorLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.r),
@@ -27,8 +28,8 @@ Future<void> showDialogMessage(
         child: Padding(
           padding: EdgeInsets.all(20.sp),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // shrink to content
-            children: [
+            mainAxisSize: MainAxisSize.min, 
+                        children: [
               Gap(5.h),
               Row(
                 children: [
@@ -64,74 +65,117 @@ Future<void> showDialogMessage(
 
 Future<void> showFeatureNotEnabledDialog(BuildContext context) {
   return showDialog(
-    
     context: context,
-    barrierDismissible: false, 
+    barrierDismissible: true,
     builder: (context) {
       return Dialog(
-        backgroundColor: CostItColors.brightGrey.shade100,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: context.color.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(24.r),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.cancel, color: CostItColors.primary3),
-                  onPressed: () => Navigator.of(context).pop(),
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark 
+                      ? Colors.white 
+                      : context.color.primary, 
+                  BlendMode.srcIn,
+                ),
+                child: Lottie.asset(
+                  "assets/animations/sorry4.json",
+                  height: 120.h,
+                  fit: BoxFit.contain,
                 ),
               ),
-
-              // Title
+              SizedBox(height: 16.h),
               Text(
-                "Oops!",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Animation
-              Lottie.asset(
-                "assets/animations/sorry4.json",
-                height: 100.h,
-                fit: BoxFit.contain,
-              ),
-
-              const SizedBox(height: 12),
-
-              // Content Text
-              Text(
-                "This feature is not yet enabled",
+                "Coming Soon!",
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: context.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: context.color.onPrimary,
+                  fontSize: 20.sp,
+                ),
               ),
-
-              const SizedBox(height: 16),
-
-              // Close button
-              TextButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    CostItColors.primary1,
+              SizedBox(height: 8.h),
+              Text(
+                "We're still working on this feature. Check back later!",
+                textAlign: TextAlign.center,
+                style: context.bodyMedium?.copyWith(
+                  color: context.color.inverseSurface.withValues(alpha: 0.6),
+                  height: 1.5,
+                ),
+              ),
+              SizedBox(height: 32.h),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: FilledButton.styleFrom(
+                  backgroundColor: context.color.primary,
+                  padding: EdgeInsets.symmetric(vertical: 14.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
-                onPressed: () => Navigator.of(context).pop(),
                 child: Text(
-                  "Close",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColorLight,
+                  "Got It",
+                  style: context.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ],
           ),
         ),
+      );
+    },
+  );
+}
+
+Future<bool?> showDiscardChangesDialog(BuildContext context) {
+  return showDialog<bool>(
+    barrierDismissible: false,
+    useRootNavigator: true,
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 40.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        titlePadding: EdgeInsets.only(top: 20.h, left: 24.w, right: 24.w),
+        contentPadding: EdgeInsets.only(top: 12.h, left: 24.w, right: 24.w, bottom: 8.h),
+        actionsPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        title: Text(
+          'Discard Changes?', 
+          style: context.titleSmall?.copyWith(fontSize: 16.sp),
+        ),
+        content: Text(
+          'You have unsaved changes. Are you sure you want to discard them?',
+          style: context.bodySmall?.copyWith(
+            fontWeight: FontWeight.normal,
+            color: context.color.inverseSurface.withValues(alpha: 0.8),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('No', style: context.bodySmall),
+          ),
+          SizedBox(width: 8.w),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              'Yes',
+              style: context.bodySmall?.copyWith(color: CostItColors.error),
+            ),
+          ),
+        ],
       );
     },
   );

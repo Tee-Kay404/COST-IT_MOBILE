@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:cost_it_mobile/app/global/errors/error_handler.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/feature/auth/providers/providers.dart';
@@ -48,8 +48,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
     return _phoneController.text.trim();
   }
 
-  bool get _isFilled =>
-      _tabController.index == 0 ? _emailFilled : _phoneFilled;
+  bool get _isFilled => _tabController.index == 0 ? _emailFilled : _phoneFilled;
 
   @override
   void initState() {
@@ -113,13 +112,13 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
           error,
           fieldErrors: {
             'identifier': (msg) => setState(() {
-                  // Route the server error to the correct tab's error field
-                  if (_tabController.index == 0) {
-                    _emailError = msg;
-                  } else {
-                    _phoneError = msg;
-                  }
-                }),
+              // Route the server error to the correct tab's error field
+              if (_tabController.index == 0) {
+                _emailError = msg;
+              } else {
+                _phoneError = msg;
+              }
+            }),
           },
         );
         return null;
@@ -130,10 +129,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
       Navigator.pushNamed(
         context,
         PageRoutes.otpResetPassword.name,
-        arguments: (
-          identifier: identifier,
-          nextRoute: PageRoutes.login,
-        ),
+        arguments: (identifier: identifier, nextRoute: PageRoutes.login),
       );
     }
   }
@@ -151,6 +147,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
     final theme = Theme.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 10.sp),
@@ -166,7 +163,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
                 'Reset Password?',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   fontSize: 25.sp,
-                  color: context.color.primary,
+                  color: context.color.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -207,8 +204,8 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
 
               TabBar(
                 controller: _tabController,
-                indicatorColor: context.color.primary,
-                labelColor: context.color.primary,
+                indicatorColor: context.color.onPrimary,
+                labelColor: context.color.onPrimary,
                 unselectedLabelColor: Colors.grey,
                 tabs: const [
                   Tab(text: "Email"),
@@ -317,10 +314,7 @@ class _ForgotPasswordViewState extends ConsumerState<ForgotPasswordView>
 
               Gap(20.h),
 
-              LoadingButton(
-                onTap: _isFilled ? _next : null,
-                text: 'Next',
-              ),
+              LoadingButton(onTap: _isFilled ? _next : null, text: 'Next'),
 
               Gap(20.h),
             ],

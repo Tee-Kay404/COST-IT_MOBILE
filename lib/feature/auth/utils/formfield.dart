@@ -1,5 +1,5 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
-import 'package:cost_it_mobile/app/global/styles.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +24,14 @@ class CostItFormfield extends StatelessWidget {
   final FormFieldValidator<String?>? validator;
   final Iterable<String>? autofillHint;
   final TextInputType? keyboardType;
+  final bool readOnly;
+  final bool? enabled;
   final BorderRadius? borderRadius;
+  final FocusNode? focusNode;
+  final Widget? label;
+  final int? minLines;
+  final int? maxLines;
+  
   const CostItFormfield({
     super.key,
     this.autovalidateMode,
@@ -41,21 +48,31 @@ class CostItFormfield extends StatelessWidget {
     this.suffixIcon,
     this.errorText,
     this.hintText,
+    this.readOnly = false,
+    this.enabled,
     this.borderRadius,
     this.labelText,
     this.hintStyle,
     this.labelStyle,
     this.enabledBorder,
     this.autofillHint,
+    this.focusNode,
+    this.label,
+    this.minLines,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return TextFormField(
       cursorColor: context.theme.focusColor,
-      autocorrect: true,
       onChanged: onChanged,
       autofocus: autofocus ?? false,
+      readOnly: readOnly,
+      focusNode: focusNode,
+      enabled: enabled,
       autovalidateMode: autovalidateMode,
       validator: validator,
       onSaved: onSaved,
@@ -64,24 +81,30 @@ class CostItFormfield extends StatelessWidget {
       style: context.bodyMedium?.copyWith(
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
-        color: context.theme.primaryColorDark,
+        color: context.color.inverseSurface,
       ),
       autofillHints: autofillHint,
       keyboardType: keyboardType,
+      minLines: minLines,
+      maxLines: maxLines ?? 1,
       decoration:
           outlinedTextFields(
             context,
             borderRadius: borderRadius,
             enabledBorder: enabledBorder,
           ).copyWith(
+            isDense: true,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: 8.w,
-              vertical: 8.h,
+              horizontal: 14.w,
+              vertical: 24.h,
             ),
             counterText: '',
             hintText: hintText,
             labelText: labelText,
-            prefixIconColor: CostItColors.brightGrey.shade800,
+            label: label,
+            prefixIconColor: isDark
+                ? CostItColors.brightGrey.shade100
+                : CostItColors.brightGrey.shade800,
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             errorText: errorText,

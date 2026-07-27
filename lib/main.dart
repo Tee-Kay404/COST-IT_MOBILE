@@ -1,54 +1,31 @@
-import 'package:bot_toast/bot_toast.dart';
-import 'package:cost_it_mobile/app/global/config.dart';
-import 'package:cost_it_mobile/app/global/providers.dart';
-import 'package:cost_it_mobile/app/theme/theme.dart';
-import 'package:cost_it_mobile/route/routes.dart';
+import 'package:cost_it_mobile/app/global/utils/config.dart';
+import 'package:cost_it_mobile/app/root/cost_it_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Lock to portrait only — consistent MVP experience across all phones.
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Default system UI style — status bar is primary-colored with white icons.
+  // Screens that extend behind the AppBar (e.g. product details) override this
+  // locally via AnnotatedRegion. Login & signup also override via AnnotatedRegion.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF6580CF),
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Color(0xFF6580CF),          // light-theme primary
+      statusBarIconBrightness: Brightness.light,  // white icons on primary
+      systemNavigationBarColor: Color(0xFF6580CF),
+      systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
 
   AppConfig(environment: Environment.dev);
-  runApp(
-    ProviderScope(
-      child: Consumer(
-        builder: (context, ref, _) {
-          ref.watch(appStateLoaderProvider);
-          return CostItApp();
-        },
-      ),
-    ),
-  );
-}
 
-class CostItApp extends StatelessWidget {
-  const CostItApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      minTextAdapt: true,
-      splitScreenMode: true,
-      designSize: Size(411.43, 892.57),
-      builder: (context, child) => MaterialApp(
-        theme: AppTheme.lightMode,
-        builder: BotToastInit(),
-        initialRoute: PageRoutes.onBoarding.name,
-        onGenerateRoute: onGenerateRoute,
-        debugShowCheckedModeBanner: false,
-      ),
-    );
-  }
+  runApp(const ProviderScope(child: CostItApp()));
 }

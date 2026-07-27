@@ -1,3 +1,4 @@
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,17 +18,14 @@ class SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        style: TextButton.styleFrom(
-            backgroundColor: Colors.grey[100],
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            textStyle: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(color: Colors.black),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25.r),
-            ),
-            minimumSize: Size(width.w, height)),
+        style: flatTextButtonStyle(
+            backgroundColor: Colors.grey[100] ?? Colors.grey,
+            textColor: Theme.of(context).colorScheme.secondary,
+            borderRadius: 25,
+        ).copyWith(
+            minimumSize: WidgetStatePropertyAll(Size(width.w, height)),
+            textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.black)),
+        ),
         onPressed: onPressed,
         child: Text(
           text,

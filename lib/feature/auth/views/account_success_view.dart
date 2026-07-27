@@ -1,4 +1,5 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/route/routes.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,7 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                             Text(
                               'Account Verified',
                               style: context.bodySmall?.copyWith(
-                                color: context.color.primary,
+                                color: context.color.onPrimary,
                                 fontSize: 13.sp,
                               ),
                             ),
@@ -183,7 +184,7 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                       ),
                       Gap(10.h),
                       _InfoRow(
-                        iconColor: context.color.primary,
+                        iconColor: context.color.onPrimary,
                         iconBg: context.color.surface,
                         icon: Icons.lock_rounded,
                         title: 'Secure & verified',
@@ -201,15 +202,13 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                             PageRoutes.login.name,
                             (route) => false,
                           ),
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(double.infinity, 50.h),
-                            backgroundColor: context.color.primary,
-                            foregroundColor: context.color.surface,
+                          style: flatButtonStyle(
+                            color: context.color.primary,
+                            textColor: context.color.onSecondary,
                             padding: EdgeInsets.symmetric(vertical: 16.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            elevation: 0,
+                            borderRadius: 14,
+                          ).copyWith(
+                            fixedSize: WidgetStatePropertyAll(Size(double.infinity, 50.h)),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -219,6 +218,7 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w600,
+                                  color: context.color.onSecondary,
                                 ),
                               ),
                               Gap(8.w),
@@ -229,7 +229,7 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                                   color: Colors.white.withOpacity(0.2),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.arrow_forward, size: 14.sp),
+                                child: Icon(Icons.arrow_forward, size: 14.sp, color: context.color.onSecondary),
                               ),
                             ],
                           ),
@@ -249,7 +249,7 @@ class _AccountSuccessViewState extends State<AccountSuccessView>
                             ' Contact support',
                             style: context.bodySmall?.copyWith(
                               fontSize: 13.sp,
-                              color: context.color.primary,
+                              color: context.color.onPrimary,
                             ),
                           ),
                         ],
@@ -309,6 +309,7 @@ class _InfoRow extends StatelessWidget {
                 style: context.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                   fontSize: 14.sp,
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.black : null,
                 ),
               ),
               Gap(2.h),

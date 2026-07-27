@@ -1,0 +1,244 @@
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/errors/error_handler.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
+import 'package:cost_it_mobile/app/theme/theme.dart';
+import 'package:cost_it_mobile/constants/constants.dart';
+import 'package:cost_it_mobile/extensions/string_extension.dart';
+import 'package:cost_it_mobile/feature/auth/shared/button.dart';
+import 'package:cost_it_mobile/feature/auth/shared/loaders.dart';
+import 'package:cost_it_mobile/feature/auth/utils/otp_field.dart';
+import 'package:cost_it_mobile/widgets/dark_round_button.dart';
+import 'package:cost_it_mobile/widgets/progress_loaders.dart';
+import 'package:cost_it_mobile/widgets/resend_otp_widget.dart';
+import 'package:cost_it_mobile/widgets/toasts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cost_it_mobile/feature/auth/service/auth_service.dart';
+import 'package:cost_it_mobile/app/global/utils/providers.dart';
+
+class EmailVerificationView extends ConsumerStatefulWidget {
+  final String email;
+
+  const EmailVerificationView({super.key, required this.email});
+
+  @override
+  ConsumerState<EmailVerificationView> createState() =>
+      _EmailVerificationViewState();
+}
+
+class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
+  final _pinController = TextEditingController();
+  final _focusNode = FocusNode();
+
+  bool _hasError = false;
+  String _errorText = '';
+
+  @override
+  void dispose() {
+    _pinController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  Future<void> _verify() async {
+    final otp = _pinController.text;
+
+    if (otp.length != 4) return;
+
+    await futureProgressCaller(
+      context,
+      loaderType: LoaderType.sheet,
+      loadingMessage: "Verifying...",
+      computation: () async {
+        final authService = ref.read(authServiceProvider);
+        final updatedUser = await authService.verifyUpdateEmailOtp({
+          'otp': otp,
+          'newEmail': widget.email,
+        });
+        ref.read(appStateProvider.notifier).updateUser(updatedUser);
+        return true;
+      },
+      onError: (error) {
+        final ex = error is GlobalException ? error : null;
+        final backendMessage = ex?.message ?? 'Invalid OTP, please try again';
+
+        setState(() {
+          _hasError = true;
+          _errorText = backendMessage;
+        });
+        _pinController.clear();
+        _focusNode.requestFocus();
+        return false;
+      },
+    ).then((result) {
+      if (result == true) {
+        if (!mounted) return;
+        showSuccessToast(context, "Email verified successfully");
+        Navigator.pop(context); // Go back to edit profile page
+      }
+    });
+  }
+
+  Future<bool> _resendOTP({bool initial = false}) async {
+    setState(() {
+      _hasError = false;
+      _errorText = '';
+    });
+
+    _pinController.clear();
+
+    return futureProgressCaller(
+      context,
+      loaderType: LoaderType.snack,
+      loadingMessage: "Sending code...",
+      computation: () async {
+        final authService = ref.read(authServiceProvider);
+        await authService.sendUpdateEmailOtp({'newEmail': widget.email});
+        return true;
+      },
+      onError: (error) {
+        ErrorHandler.handle(context, error);
+        return false;
+      },
+    ).then((value) {
+      if (value == true && !initial) {
+        if (!mounted) return false;
+        showSuccessToast(context, "OTP sent successfully");
+      }
+      return value == true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 16.h),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: BackArrowButton(),
+                    ),
+
+                    SizedBox(height: 10.h),
+
+                    Center(
+                      child: Image.asset(
+                        AppImages.verifyEmail, // reuse the image
+                        width: size.width * 0.4,
+                        height: size.height * 0.18,
+                      ),
+                    ),
+
+                    SizedBox(height: 10.h),
+
+                    Text(
+                      'Email Verification',
+                      style: context.bodyLarge?.copyWith(
+                        fontSize: 28.sp,
+                        color: context.color.onPrimary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    SizedBox(height: 10.h),
+
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: context.bodySmall?.copyWith(
+                          color: CostItColors.brightGrey.shade500,
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: "We've sent a one-time password to ",
+                          ),
+                          TextSpan(
+                            text: widget.email.maskEmail,
+                            style: context.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: context.color.onPrimary,
+                            ),
+                          ),
+                          const TextSpan(
+                            text:
+                                ". Please enter the code to verify your new email.",
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    OTPField(
+                      cursorColor: _hasError
+                          ? CostItColors.error
+                          : context.color.primary,
+                      controller: _pinController,
+                      focusNode: _focusNode,
+                      forceErrorState: _hasError,
+                      onCompleted: (_) => _verify(),
+                      onChanged: (_) {
+                        if (_hasError) {
+                          setState(() {
+                            _hasError = false;
+                            _errorText = '';
+                          });
+                        }
+                      },
+                    ),
+
+                    if (_hasError) ...[
+                      SizedBox(height: 10.h),
+                      Center(
+                        child: Text(
+                          _errorText,
+                          style: context.bodySmall?.copyWith(
+                            color: CostItColors.error,
+                          ),
+                        ),
+                      ),
+                    ],
+
+                    SizedBox(height: 40.h),
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22.w),
+              child: Column(
+                children: [
+                  LoadingButton(text: "Verify", onTap: _verify),
+
+                  SizedBox(height: 12.h),
+
+                  Center(
+                    child: ResendOTPWidget(
+                      timeLimit: 60,
+                      resendThreshold: 4,
+                      onPress: _resendOTP,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/feature/auth/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,10 +23,7 @@ class SocialButtons extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(12.h),
-                  border: Border.all(
-                    color: CostItColors.primary3,
-                    width: 1.5.w,
-                  ),
+                  border: Border.all(color: Color(0xFF2D2C2C), width: 1.5.w),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +34,7 @@ class SocialButtons extends ConsumerWidget {
                       provider.displayText,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontSize: 14.sp,
-                        color: Colors.black,
+                        color: context.color.inverseSurface,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

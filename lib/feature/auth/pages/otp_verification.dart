@@ -8,7 +8,7 @@ class OTPVerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(child: OTPVerificationView(info: info)),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cost_it_mobile/app/global/utils/text_links.dart';
 import 'package:cost_it_mobile/extensions/textstyle_extension.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,9 @@ class TextSpanWithLink extends StatelessWidget {
         style: style,
         children: textSpanList.map((textSpan) {
           TextStyle textStyle =
-              (textSpan.link == null && textSpan.onTap == null)
+              (textSpan.link == null &&
+                  textSpan.onTap == null &&
+                  textSpan.textLink == null)
               ? ((style ?? Theme.of(context).textTheme.bodyMedium!).copyWith(
                   height: height,
                 ))
@@ -42,7 +45,9 @@ class TextSpanWithLink extends StatelessWidget {
                         .copyWith(height: height))
                     .copyWith(color: linkColor);
           if (autoUnderlined &&
-              (textSpan.link != null || textSpan.onTap != null)) {
+              (textSpan.link != null ||
+                  textSpan.onTap != null ||
+                  textSpan.textLink != null)) {
             textStyle = textStyle.underlined(color: linkColor, distance: 1);
           }
           return TextSpan(
@@ -50,7 +55,9 @@ class TextSpanWithLink extends StatelessWidget {
             style: textStyle,
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
-                if (textSpan.link != null) {
+                if (textSpan.textLink != null) {
+                  await textSpan.textLink!.launch();
+                } else if (textSpan.link != null) {
                   final uri = Uri.parse(textSpan.link!);
 
                   final success = await launchUrl(
@@ -75,6 +82,14 @@ class TextSpanWithLink extends StatelessWidget {
 class TextWithLinkModel {
   final String text;
   final String? link;
+  final TextLink? textLink;
   final VoidCallback? onTap;
-  const TextWithLinkModel({required this.text, this.link, this.onTap});
+  final TextStyle? style;
+  const TextWithLinkModel({
+    required this.text,
+    this.link,
+    this.textLink,
+    this.onTap,
+     this.style,
+  });
 }

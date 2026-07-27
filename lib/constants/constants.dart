@@ -47,46 +47,69 @@ class AppSVG {
 }
 
 class AppImages {
-  static String avatar = 'assets/images/avatar.png';
-  static String avatar2 = 'assets/images/avatar2.png';
-  static String avatar3 = 'assets/images/avatar3.png';
-  static String btc = 'assets/images/btc.png';
-  static String getKey = 'assets/images/getkeys.png';
+  static String avatar = 'assets/images/logos/icon_logo.png';
+  static String avatar2 = 'assets/images/logos/icon_logo.png';
+  static String avatar3 = 'assets/images/logos/icon_logo.png';
+  static String btc = 'assets/images/other/wallet.png';
+  static String getKey = 'assets/images/logos/cost-it.png';
 
-  static String moneySent = 'assets/images/success_icon_congrate.png';
+  static String moneySent = 'assets/images/other/success.png';
 
-  static const iconWhite = "assets/images/icon_white.png";
-  static const iconWhiteSvg = "assets/images/iconWhite.svg";
-  static const textIconWhite = "assets/images/textIconWhite.png";
-  static const logoWhite = "assets/images/logo_white.png";
-  static const logoBlueOutlined = "assets/images/logo_blue_outlined.png";
+  static const iconWhite = "assets/images/logos/icon_logo.png";
+  static const iconWhiteSvg = "assets/images/logos/icon_logo.png";
+  static const textIconWhite = "assets/images/logos/cost-it.png";
+  static const logoWhite = "assets/images/logos/cost-it_logo.png";
+  static const logoBlueOutlined = "assets/images/logos/logos.png";
 
-  static const onboarding1 = "assets/images/build6.png";
-  static const onboarding2 = "assets/images/build2.png";
-  static const onboarding3 = "assets/images/build3.png";
-  static const onboarding4 = "assets/images/convo.png";
-  static const onboarding5 = "assets/images/build.png";
-  static const getStarted = 'assets/images/getStarted-min.jpg';
-  static const logo = "assets/images/cost-it_logo.png";
-  static const String visible = "assets/images/visible.png";
-  static const String invisible = "assets/images/invisible.png";
-  static const String verifyEmail = 'assets/images/verify_email.jpg';
+  // Onboarding images 
+  static const onboarding1 = "assets/images/onBoarding/onboarding1.png";
+  static const onboarding2 = "assets/images/onBoarding/onboarding2.png";
+  static const onboarding3 = "assets/images/onBoarding/onboarding3.png";
+  static const onboarding4 = "assets/images/onBoarding/onboarding4.png";
+  static const onboarding5 = "assets/images/onBoarding/onboarding5.png";
+  static const getStarted = 'assets/images/onBoarding/getStarted.jpg';
 
-  static const createWallet = "assets/images/createWallet.png";
 
-  static const String facebookLogo = 'assets/images/facebook_logo.png';
-  static const String google = 'assets/images/Google_logo.png';
+  static const logo = "assets/images/logos/cost-it_logo.png";
+  static const String visible = "assets/images/other/visible.png";
+  static const String invisible = "assets/images/other/invisible.png";
+  static const String verifyEmail = 'assets/images/other/verify_email.jpg';
+
+  static const createWallet = "assets/images/other/wallet.png";
+
+  static const String facebookLogo = 'assets/images/socials/facebook_logo.png';
+  static const String google = 'assets/images/socials/Google_logo.png';
+  static const String whatsapp = 'assets/images/socials/whatsapp.png';
   static const String apple = 'assets/icons/apple.png';
-  static const String applePayLogo = 'assets/images/apple_pay_logo.png';
-  static const String paypalLogo = 'assets/images/paypal_logo.png';
+  static const String applePayLogo = 'assets/images/socials/Apple_logo.png';
+  static const String paypalLogo = 'assets/images/other/paypal_logo.png';
   static const String venmoLogo = 'assets/images/venmo_logo.png';
   static const String coinbaseLogo = 'assets/images/coinbase_logo.png';
-  static const String moonpayLogo = 'assets/images/moonpay_logo.png';
+  static const String moonpayLogo = 'assets/images/other/moonpay_logo.png';
   static const String stripeLogo = 'assets/images/stripe_logo.png';
-  static const String x = 'assets/images/x_logo.png';
-  static const String logo2 = "assets/images/logs1.png";
-  static const String success = "assets/images/success.png";
+  static const String x = 'assets/images/logos/x_logo.png';
+  static const String logo2 = "assets/images/logos/logs1.png";
+  static const String success = "assets/images/other/success.png";
   static const String chip = "assets/images/chip.png";
+  static const String floatLogo = 'assets/images/logos/logo!.png';
+
+  // categories
+  static const String materials = 'assets/images/category/materials.jpg';
+  static const String electrical = 'assets/images/category/electrical.jpg';
+  static const String plumbing = 'assets/images/category/plumbing.jpg';
+  static const String services = 'assets/images/category/services.jpg';
+  static const String logistics = 'assets/images/category/logistics.jpg';
+  static const String tools = 'assets/images/category/tools.jpg';
+  static const String finishing = 'assets/images/category/finishing.jpg';
+  static const String machinery = 'assets/images/category/machinery.jpg';
+  static const String safety = 'assets/images/category/safety.jpg';
+  static const String chat = 'assets/images/chat/chat.png';
+
+  // google maps
+  static const String map = 'assets/images/location/google_map.png';
+  static const String map1 = 'assets/images/location/google_maps.png';
+  static const String darkmap = 'assets/images/location/google_map_dark.png';
+
 }
 
 extension SafeSpacing on BuildContext {

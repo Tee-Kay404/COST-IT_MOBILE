@@ -1,5 +1,3 @@
-// Data model
-
 import 'package:flutter/material.dart';
 
 class OnBoardingData {

@@ -1,14 +1,14 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
-import 'package:cost_it_mobile/app/global/errors/dialog/scaffold_message.dart';
-import 'package:cost_it_mobile/app/global/exception.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/dialog/scaffold_message.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
+import 'package:cost_it_mobile/feature/auth/shared/field_label.dart';
 import 'package:cost_it_mobile/constants/constants.dart';
 import 'package:cost_it_mobile/feature/auth/providers/providers.dart';
 import 'package:cost_it_mobile/feature/auth/shared/loaders.dart';
 import 'package:cost_it_mobile/feature/auth/shared/reusable_button.dart';
 import 'package:cost_it_mobile/feature/auth/shared/validators.dart';
 import 'package:cost_it_mobile/feature/auth/utils/formfield.dart';
-import 'package:cost_it_mobile/feature/auth/views/sign_up_view.dart';
 import 'package:cost_it_mobile/route/routes.dart';
 import 'package:cost_it_mobile/widgets/dark_round_button.dart';
 import 'package:cost_it_mobile/widgets/progress_loaders.dart';
@@ -86,6 +86,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 10.sp),
@@ -113,7 +114,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                   'Create New Password',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 25.sp,
-                    color: context.color.primary,
+                    color: context.color.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -144,7 +145,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                         _obscured ? AppImages.invisible : AppImages.visible,
                         width: 22.w,
                         height: 22.h,
-                        color: CostItColors.brightGrey.shade800,
+                        color: context.color.inverseSurface,
                       ),
                     ),
                   ),
@@ -173,7 +174,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                             : AppImages.visible,
                         width: 22.w,
                         height: 22.h,
-                        color: CostItColors.brightGrey.shade800,
+                        color: context.color.inverseSurface,
                       ),
                     ),
                   ),

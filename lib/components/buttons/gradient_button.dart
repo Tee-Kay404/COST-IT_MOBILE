@@ -1,3 +1,4 @@
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,12 +18,12 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).colorScheme.surface,
-        minimumSize: Size(width.w, height.h),
-        shape: StadiumBorder(),
-        // textStyle: Theme.of(context).textTheme.titleMedium,
-        padding: const EdgeInsets.symmetric(horizontal: 0),
+      style: flatTextButtonStyle(
+        textColor: Theme.of(context).colorScheme.surface,
+      ).copyWith(
+        minimumSize: WidgetStatePropertyAll(Size(width.w, height.h)),
+        shape: const WidgetStatePropertyAll(StadiumBorder()),
+        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 0)),
       ),
       onPressed: onPressed,
       child: Ink(

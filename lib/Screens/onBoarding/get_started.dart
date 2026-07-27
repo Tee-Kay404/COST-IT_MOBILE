@@ -1,22 +1,24 @@
-import 'dart:ui';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/utils/providers.dart';
+import 'package:cost_it_mobile/feature/auth/shared/reusable_button.dart';
+import 'package:cost_it_mobile/widgets/glass_card.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/constants/constants.dart';
-import 'package:cost_it_mobile/feature/auth/shared/reusable_button.dart';
 import 'package:cost_it_mobile/route/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class GetStarted extends StatefulWidget {
+class GetStarted extends ConsumerStatefulWidget {
   const GetStarted({super.key});
 
   @override
-  State<GetStarted> createState() => _GetStartedState();
+  ConsumerState<GetStarted> createState() => _GetStartedState();
 }
 
-class _GetStartedState extends State<GetStarted>
+class _GetStartedState extends ConsumerState<GetStarted>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fade;
@@ -83,54 +85,26 @@ class _GetStartedState extends State<GetStarted>
     super.dispose();
   }
 
-  Widget _glassCard(Widget child) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(28.r),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 26.h),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28.r),
-            color: Colors.white.withOpacity(0.07),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.18),
-              width: 1.2,
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withOpacity(0.13),
-                Colors.white.withOpacity(0.02),
-              ],
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
 
   Widget _divider() {
     return Row(
       children: [
         Expanded(
-          child: Container(height: 0.5, color: Colors.white.withOpacity(0.2)),
+          child: Container(height: 0.5, color: Colors.white.withValues(alpha: 0.2)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
             "or",
             style: TextStyle(
-              color: Colors.white.withOpacity(0.35),
+              color: Colors.white.withValues(alpha: 0.35),
               fontSize: 12.sp,
               letterSpacing: 1.2,
             ),
           ),
         ),
         Expanded(
-          child: Container(height: 0.5, color: Colors.white.withOpacity(0.2)),
+          child: Container(height: 0.5, color: Colors.white.withValues(alpha: 0.2)),
         ),
       ],
     );
@@ -156,10 +130,10 @@ class _GetStartedState extends State<GetStarted>
                   end: Alignment.bottomCenter,
                   stops: const [0.0, 0.35, 0.65, 1.0],
                   colors: [
-                    Colors.black.withOpacity(0.15),
-                    Colors.black.withOpacity(0.25),
-                    Colors.black.withOpacity(0.6),
-                    Colors.black.withOpacity(0.92),
+                    Colors.black.withValues(alpha: 0.15),
+                    Colors.black.withValues(alpha: 0.25),
+                    Colors.black.withValues(alpha: 0.6),
+                    Colors.black.withValues(alpha: 0.92),
                   ],
                 ),
               ),
@@ -173,7 +147,7 @@ class _GetStartedState extends State<GetStarted>
             child: FadeTransition(
               opacity: _fade,
               child: Image.asset(
-                "assets/images/cost-it_logo.png",
+                AppImages.logoWhite,
                 height: 180.h,
                 width: 220.w,
                 fit: BoxFit.contain,
@@ -203,7 +177,7 @@ class _GetStartedState extends State<GetStarted>
                               style: TextStyle(
                                 fontSize: 50.sp,
                                 fontWeight: FontWeight.w500,
-                                color: context.color.surface,
+                                color: CostItColors.white,
                                 height: 1.15,
                                 letterSpacing: -3.2,
                               ),
@@ -240,7 +214,7 @@ class _GetStartedState extends State<GetStarted>
                                   text,
                                   speed: const Duration(milliseconds: 55),
                                   textStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 46.sp,
                                     fontWeight: FontWeight.w900,
                                     height: 1.12,
@@ -254,7 +228,6 @@ class _GetStartedState extends State<GetStarted>
                     ),
                   ),
 
-                  // accent bar
                   FadeTransition(
                     opacity: _fadeSlow,
                     child: Row(
@@ -272,7 +245,7 @@ class _GetStartedState extends State<GetStarted>
                           height: 4.h,
                           width: 14.w,
                           decoration: BoxDecoration(
-                            color: context.color.secondary.withOpacity(0.4),
+                            color: context.color.secondary.withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -282,20 +255,19 @@ class _GetStartedState extends State<GetStarted>
 
                   Gap(32.h),
 
-                  //  Glass card
                   FadeTransition(
                     opacity: _fadeSlow,
                     child: SlideTransition(
                       position: _slideSubtle,
-                      child: _glassCard(
-                        Column(
+                      child: GlassCard(
+                        child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               "Your all-in-one construction partner.\nFrom labour to materials — at your fingertips.",
                               textAlign: TextAlign.center,
                               style: context.bodySmall?.copyWith(
-                                color: Colors.white.withOpacity(0.85),
+                                color: Colors.white.withValues(alpha: 0.85),
                                 height: 1.6,
                                 letterSpacing: 0.1,
                               ),
@@ -303,13 +275,13 @@ class _GetStartedState extends State<GetStarted>
 
                             Gap(22.h),
 
-                            // Primary CTA
                             SharedButton(
                               text: 'Get Started',
 
-                              onPressed: () => Navigator.pushNamed(
+                              onPressed: () => Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 PageRoutes.login.name,
+                                (route) => false,
                               ),
                             ),
 
@@ -319,7 +291,6 @@ class _GetStartedState extends State<GetStarted>
 
                             Gap(20.h),
 
-                            // Login / Sign Up row
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -334,7 +305,7 @@ class _GetStartedState extends State<GetStarted>
                                 Container(
                                   width: 1,
                                   height: 18.h,
-                                  color: Colors.white.withOpacity(0.25),
+                                  color: Colors.white.withValues(alpha: 0.25),
                                 ),
                                 Gap(12.w),
                                 _buildAuthButton(
@@ -352,20 +323,31 @@ class _GetStartedState extends State<GetStarted>
 
                             // Guest link
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () async {
+                                // Persist guest flag so the splash can restore
+                                // this user to the dashboard on next launch.
+                                await ref
+                                    .read(appStateProvider.notifier)
+                                    .setGuestMode(true);
+                                if (!context.mounted) return;
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  PageRoutes.dashBoard.name,
+                                  (route) => false,
+                                );
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "Continue as Guest",
-                                    style: TextStyle(
+                                    style: context.bodySmall?.copyWith(
                                       color: context.color.secondary,
-                                      fontSize: 13.sp,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.2,
                                       decoration: TextDecoration.underline,
                                       decorationColor: context.color.secondary
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: 0.5),
                                       decorationThickness: 1.2,
                                     ),
                                   ),
@@ -394,7 +376,6 @@ class _GetStartedState extends State<GetStarted>
     );
   }
 
-  // Log In / Sign Up
   Widget _buildAuthButton({
     required String label,
     required VoidCallback onTap,
@@ -407,13 +388,13 @@ class _GetStartedState extends State<GetStarted>
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
         decoration: BoxDecoration(
           color: isPrimary
-              ? context.color.secondary.withOpacity(0.15)
+              ? context.color.secondary.withValues(alpha: 0.15)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30.r),
           border: Border.all(
             color: isPrimary
-                ? context.color.secondary.withOpacity(0.6)
-                : Colors.white.withOpacity(0.25),
+                ? context.color.secondary.withValues(alpha: 0.6)
+                : Colors.white.withValues(alpha: 0.25),
             width: 1,
           ),
         ),

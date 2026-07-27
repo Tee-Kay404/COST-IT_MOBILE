@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:cost_it_mobile/widgets/dialogbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +14,8 @@ class CostItSpeedDial extends StatelessWidget {
       icon: (Icons.folder_outlined),
       mini: true,
       animatedIcon: AnimatedIcons.add_event,
-      backgroundColor: CostItColors.primary2,
-      foregroundColor: CostItColors.primaryLightes,
+      backgroundColor: CostItColors.primary,
+      foregroundColor: CostItColors.white,
       overlayColor: CostItColors.primary2,
       overlayOpacity: 0.3.sp,
       spacing: 5.h,

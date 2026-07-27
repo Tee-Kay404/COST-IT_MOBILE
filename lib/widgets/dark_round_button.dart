@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BackArrowButton extends StatelessWidget {
   final void Function()? onTap;
-   const BackArrowButton({super.key, this.onTap});
+  const BackArrowButton({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {

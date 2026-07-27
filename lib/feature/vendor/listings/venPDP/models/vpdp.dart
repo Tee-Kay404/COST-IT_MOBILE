@@ -1,0 +1,9 @@
+export  '../components/bottom_action_bar.dart';
+export '../components/description_card.dart';
+export '../components/details_grid.dart';
+export '../components/hero_gallery.dart';
+export '../components/metric_strip.dart';
+export '../components/more_actions_sheet.dart';
+export '../components/shared_widgets.dart';
+export '../components/special_offer_pill.dart';
+export '../components/title_price_card.dart';

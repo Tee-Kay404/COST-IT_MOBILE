@@ -1,9 +1,9 @@
-import 'package:cost_it_mobile/app/global/providers.dart';
+import 'package:cost_it_mobile/app/global/utils/providers.dart';
 import 'package:cost_it_mobile/constants/constants.dart';
 import 'package:cost_it_mobile/feature/auth/models/users_models.dart';
 import 'package:cost_it_mobile/feature/auth/service/auth_service.dart';
+import 'package:cost_it_mobile/feature/auth/utils/socials/apple/apple_auth_handler.dart';
 import 'package:cost_it_mobile/feature/auth/utils/socials/google/google_auth_handler.dart';
-import 'package:cost_it_mobile/widgets/dialogbox.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,6 +77,11 @@ final googleLoginProvider = FutureProvider.autoDispose
       return response;
     });
 
+final appleLoginProvider = FutureProvider.autoDispose
+    .family<UserModel, Map<String, dynamic>>((ref, payload) async {
+      return ref.read(authServiceProvider).appleLogin(payload);
+    });
+
 final logoutProvider =
     Provider<Future<void> Function(BuildContext context, WidgetRef ref)>((ref) {
       return (context, refParam) async {
@@ -84,7 +89,6 @@ final logoutProvider =
       };
     });
 
-// — Shared state
 final userEmailProvider = StateProvider<String?>((ref) => null);
 
 enum SocialLoginProvider { apple, google }
@@ -113,7 +117,7 @@ extension SocialLoginProviderExtension on SocialLoginProvider {
       case SocialLoginProvider.google:
         return () => handleGoogleSignIn(context, ref);
       case SocialLoginProvider.apple:
-        return () => showFeatureNotEnabledDialog(context);
+        return () => handleAppleSignIn(context, ref);
     }
   }
 }

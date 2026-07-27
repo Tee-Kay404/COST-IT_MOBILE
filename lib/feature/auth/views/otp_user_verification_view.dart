@@ -1,6 +1,6 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:cost_it_mobile/app/global/errors/error_handler.dart';
-import 'package:cost_it_mobile/app/global/exception.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/constants/constants.dart';
 import 'package:cost_it_mobile/extensions/string_extension.dart';
@@ -170,7 +170,7 @@ class _OTPVerificationViewState extends ConsumerState<OTPVerificationView> {
                   'E-mail Verification',
                   style: context.bodyLarge?.copyWith(
                     fontSize: 28.sp,
-                    color: context.color.primary,
+                    color: context.color.onPrimary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -186,7 +186,7 @@ class _OTPVerificationViewState extends ConsumerState<OTPVerificationView> {
                     children: [
                       TextSpan(text: "We've sent a one-time password to "),
                       TextSpan(
-                        text: widget.info.email.maskEmail(widget.info.email),
+                        text: widget.info.email.maskEmail,
                         style: context.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.color.primary,

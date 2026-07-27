@@ -1,4 +1,4 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/feature/auth/shared/reusable_button.dart';
 import 'package:cost_it_mobile/route/routes.dart';
@@ -41,7 +41,7 @@ class ResetPasswordSuccessView extends StatelessWidget {
                 style: context.bodyLarge?.copyWith(
                   fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
-                  color: context.color.primary,
+                  color: context.color.onPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),

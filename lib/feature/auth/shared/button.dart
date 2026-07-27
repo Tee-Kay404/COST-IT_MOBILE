@@ -1,3 +1,5 @@
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,21 +42,17 @@ class _LoadingButtonState extends State<LoadingButton> {
   @override
   Widget build(BuildContext context) {
     final background = (widget.onTap == null)
-        ? (widget.disabled ?? Colors.grey) // true disabled
-        : context.color.primary; // enabled
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.sp),
-        ),
-        splashFactory: NoSplash.splashFactory,
-        backgroundColor: background,
-        foregroundColor: widget.disabled,
-        elevation: 1,
-        alignment: Alignment.center,
-        minimumSize: Size(double.infinity.w, 50),
-        side: BorderSide(style: BorderStyle.none, color: Colors.transparent),
-      ),
+        ? (widget.disabled ?? Colors.grey)
+        : context.color.primary; 
+            return ElevatedButton(
+      style:
+          flatButtonStyle(
+            color: background,
+            textColor: widget.disabled ?? Colors.white,
+            borderRadius: 10,
+          ).copyWith(
+            minimumSize: WidgetStatePropertyAll(Size(double.infinity.w, 50)),
+          ),
       onPressed: widget.onTap == null ? null : _onTap,
       child: Center(
         child: isLoading
@@ -65,15 +63,13 @@ class _LoadingButtonState extends State<LoadingButton> {
                   strokeWidth: 5.w,
                   backgroundColor: context.color.primary,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    context.color.surface,
+                    CostItColors.white,
                   ), //
                 ),
               )
             : Text(
                 widget.text.toString(),
-                style: context.bodyMedium?.copyWith(
-                  color: context.color.surface,
-                ),
+                style: context.bodyMedium?.copyWith(color: CostItColors.white),
               ),
       ),
     );

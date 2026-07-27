@@ -1,6 +1,6 @@
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TxtButton extends StatelessWidget {
   final String text;
@@ -25,15 +25,11 @@ class TxtButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.sp),
-        ),
-        splashFactory: NoSplash.splashFactory,
-        side: BorderSide(style: BorderStyle.none, color: Colors.transparent),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      style: flatTextButtonStyle(
         backgroundColor: backgroundColor,
-        fixedSize: Size(width, height),
+        borderRadius: 15,
+      ).copyWith(
+        fixedSize: WidgetStatePropertyAll(Size(width, height)),
       ),
       child: Text(
         text,

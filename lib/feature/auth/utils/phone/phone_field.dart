@@ -1,5 +1,5 @@
-import 'package:cost_it_mobile/app/global/colors.dart';
-import 'package:cost_it_mobile/app/global/styles.dart';
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:cost_it_mobile/feature/auth/utils/phone/phone_formatter.dart';
 import 'package:flutter/material.dart';

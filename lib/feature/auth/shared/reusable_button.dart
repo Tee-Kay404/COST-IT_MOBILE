@@ -1,3 +1,5 @@
+import 'package:cost_it_mobile/app/global/styles/colors.dart';
+import 'package:cost_it_mobile/app/global/styles/styles.dart';
 import 'package:cost_it_mobile/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +10,7 @@ class SharedButton extends StatelessWidget {
   final Color? color;
   final Color? disabled;
   final Color? disabledForeground;
+  final Color? textColor;
   final String text;
   final IconData? icon;
   final double? height;
@@ -19,6 +22,7 @@ class SharedButton extends StatelessWidget {
     required this.text,
     this.borderRadius,
     this.color,
+    this.textColor,
     this.height = 50,
     this.width,
     this.disabled,
@@ -29,37 +33,45 @@ class SharedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        disabledBackgroundColor: disabled,
-        disabledForegroundColor: disabledForeground,
-        shape: RoundedRectangleBorder(
-          borderRadius:
-              borderRadius as BorderRadius? ?? BorderRadius.circular(10.sp),
-        ),
-        splashFactory: NoSplash.splashFactory,
-        backgroundColor: color ?? context.color.primary,
-        foregroundColor: context.color.surface,
-        alignment: Alignment.center,
-        minimumSize: Size(width ?? double.infinity.w, height ?? 50.h),
-        side: BorderSide(style: BorderStyle.none, color: Colors.transparent),
-      ),
-      onPressed: onPressed,
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          //
-          children: [
-            // Icon(icon, size: 18.sp, color: context.color.inversePrimary),
-            Gap(8.w),
-
-            Text(
-              text,
-              style: context.bodyMedium?.copyWith(
-                color: disabledForeground ?? context.color.surface,
+      style:
+          flatButtonStyle(
+            color: color ?? context.color.primary,
+            textColor: textColor ?? CostItColors.white,
+          ).copyWith(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius:
+                    borderRadius as BorderRadius? ??
+                    BorderRadius.circular(10.sp),
               ),
             ),
-          ],
-        ),
+            minimumSize: WidgetStatePropertyAll(
+              Size(width ?? double.infinity.w, height ?? 50.h),
+            ),
+          ),
+      onPressed: onPressed,
+      child: Center(
+        child: icon != null
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon!),
+                  Gap(8.w),
+                  Text(
+                    text,
+                    style: context.bodyMedium?.copyWith(
+                      color:
+                          textColor ?? disabledForeground ?? CostItColors.white,
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                text,
+                style: context.bodyMedium?.copyWith(
+                  color: textColor ?? disabledForeground ?? CostItColors.white,
+                ),
+              ),
       ),
     );
   }

@@ -1,11 +1,12 @@
 import 'dart:developer';
-
-import 'package:cost_it_mobile/app/global/config.dart';
-import 'package:cost_it_mobile/app/global/exception.dart';
-import 'package:cost_it_mobile/app/global/providers.dart';
+import 'package:cost_it_mobile/app/global/utils/config.dart';
+import 'package:cost_it_mobile/app/global/utils/exception.dart';
+import 'package:cost_it_mobile/app/global/utils/providers.dart';
 import 'package:cost_it_mobile/app/network/client.dart';
-import 'package:cost_it_mobile/app/global/interceptors.dart';
+import 'package:cost_it_mobile/app/global/utils/interceptors.dart';
 import 'package:cost_it_mobile/app/network/models.dart';
+import 'package:cost_it_mobile/app/root/root_app.dart';
+import 'package:cost_it_mobile/route/routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,7 +52,9 @@ class DioNetworkClient implements NetworkClient {
         data: response.data as T,
         statusCode: response.statusCode,
         headers: response.headers.map,
-        rawResponse: response.data,
+        rawResponse: response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : null,
       );
     } catch (e) {
       return _handleError<T>(e);
@@ -65,7 +68,9 @@ class DioNetworkClient implements NetworkClient {
       return NetworkResponse(
         data: response.data as T,
         headers: response.headers.map,
-        rawResponse: response.data,
+        rawResponse: response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : null,
         statusCode: response.statusCode,
       );
     } catch (e) {
@@ -84,7 +89,9 @@ class DioNetworkClient implements NetworkClient {
         data: response.data as T,
         statusCode: response.statusCode,
         headers: response.headers.map,
-        rawResponse: response.data,
+        rawResponse: response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : null,
       );
     } catch (e) {
       return _handleError<T>(e);
@@ -93,18 +100,14 @@ class DioNetworkClient implements NetworkClient {
 }
 
 NetworkResponse<T> _handleError<T>(dynamic error) {
-  // GlobalException already typed by interceptor — just rethrow as-is
   if (error is DioException && error.error is GlobalException) {
-     final ex = error.error as GlobalException;
+    final ex = error.error as GlobalException;
     log('_handleError — type: ${ex.type}, raw: ${ex.raw}, message: ${ex.message}');
     throw ex;
   }
 
-  // Raw DioException that somehow bypassed interceptor (shouldn't happen in prod)
   if (error is DioException) {
-    log(
-      'Unintercepted DioException: ${error.type} ${error.response?.statusCode}',
-    );
+    log('Unintercepted DioException: ${error.type} ${error.response?.statusCode}');
     throw GlobalException(
       type: ErrorType.unknown,
       message: error.message,
@@ -112,19 +115,16 @@ NetworkResponse<T> _handleError<T>(dynamic error) {
     );
   }
 
-  // Truly unexpected local error (null cast, type error, etc.)
   log('Non-Dio error in _handleError: $error');
   throw GlobalException(type: ErrorType.unknown);
 }
 
-// FIX — pass the ref, read token fresh on every request
-final dioClientProvider = Provider((ref) {
+
+final rawDioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      
       sendTimeout: AppConfig.instance.sendTimeout,
-      connectTimeout:
-          AppConfig.instance.sendTimeout, 
+      connectTimeout: AppConfig.instance.sendTimeout,
       receiveTimeout: AppConfig.instance.receiveTimeout,
       baseUrl: AppConfig.instance.baseAppUrl,
     ),
@@ -133,12 +133,34 @@ final dioClientProvider = Provider((ref) {
   dio.interceptors.add(
     AppInterceptors(
       dio: dio,
-      getToken: () => ref
-          .read(appStateProvider)
-          .user
-          ?.authToken, // ← closure, fresh every call
+      getToken: () => ref.read(appStateProvider).user?.authToken,
+      getRefreshToken: () => ref.read(appStateProvider).user?.refreshToken,
+      onTokenRefreshed: (accessToken, refreshToken) {
+        ref.read(appStateProvider.notifier).updateTokens(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
+      },
+      // Called only when refresh also fails — clear session and navigate to login.
+      onUnauthorized: () {
+        if (ref.read(appStateProvider).user == null) return;
+
+        ref.read(appStateProvider.notifier).logout();
+
+        final nav = appNavigatorKey.currentState;
+        if (nav != null && nav.mounted) {
+          nav.pushNamedAndRemoveUntil(
+            PageRoutes.login.name,
+            (route) => false,
+          );
+        }
+      },
     ),
   );
 
-  return DioNetworkClient(dio);
+  return dio;
+});
+
+final dioClientProvider = Provider<NetworkClient>((ref) {
+  return DioNetworkClient(ref.watch(rawDioProvider));
 });

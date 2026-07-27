@@ -10,7 +10,7 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height * 0.265;
+    final height = MediaQuery.of(context).size.height * 0.26;
 
     return ClipPath(
       clipper: HeaderClipper(),
